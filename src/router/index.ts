@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { StorageService } from '@/services';
 
 import routes from './routes';
+import store from '@/store';
+import { StorageService } from '@/services';
 
 Vue.use(VueRouter);
 
@@ -17,7 +18,7 @@ router.beforeEach((routeTo, routeFrom, next) => {
 
   if (!authRequired) return next();
 
-  StorageService.getToken() ? next() : next({ name: 'login' });
+  store.getters['auth/currentUser'] ? next() : next({ name: 'login' });
 });
 
 export default router;

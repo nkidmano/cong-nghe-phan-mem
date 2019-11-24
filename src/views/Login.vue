@@ -29,6 +29,9 @@
         <v-btn class="mb-4" color="secondary" tile large block @click="loginWithEmail">
           Login
         </v-btn>
+        <v-btn class="mb-4" color="primary" tile large block @click="createAccount">
+          Create account
+        </v-btn>
       </v-form>
       <p class="text-center">Or</p>
       <v-btn
@@ -52,7 +55,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { FirebaseService } from '../services';
+import { FirebaseService, StorageService } from '@/services';
 
 @Component({})
 export default class Login extends Vue {
@@ -66,13 +69,33 @@ export default class Login extends Vue {
   private async loginWithEmail(): Promise<void> {
     try {
       const credential = await FirebaseService.loginWithEmail(this.email, this.password);
-      this.$store.commit('auth/SET_USER', credential);
+      StorageService.setToken(JSON.stringify(credential));
+      this.$store.commit('auth/SET_CURRENT_USER', credential);
     } catch (error) {
-      this.email = '';
-      this.password = '';
-      this.error.message = error;
-      this.error.isShow = true;
+      this.clearForm();
+      this.showErrorAlert(error);
     }
+  }
+
+  private async createAccount(): Promise<void> {
+    try {
+      const credential = await FirebaseService.createAccount(this.email, this.password);
+      StorageService.setToken(JSON.stringify(credential));
+      this.$store.commit('auth/SET_CURRENT_USER', credential);
+    } catch (error) {
+      this.clearForm();
+      this.showErrorAlert(error);
+    }
+  }
+
+  private clearForm(): void {
+    this.email = '';
+    this.password = '';
+  }
+
+  private showErrorAlert(message: string): void {
+    this.error.isShow = true;
+    this.error.message = message;
   }
 
   private async loginWithGoogle(): Promise<void> {
