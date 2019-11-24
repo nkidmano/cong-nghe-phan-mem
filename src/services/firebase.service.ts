@@ -26,18 +26,19 @@ export default class FirebaseService {
   public static loginWithEmail(
     email: string,
     password: string
-  ): Promise<firebase.auth.UserCredential> {
+  ): Promise<firebase.auth.UserCredential | string> {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((credential) => credential)
       .catch((error) => {
         console.warn(error);
+
         if (error.code === 'auth/user-disabled') {
-          throw new Error('Account has been disabled');
+          return Promise.reject('Account has been disabled');
         }
 
-        throw new Error('Invalid email or password');
+        return Promise.reject('Invalid email or password');
       });
   }
 
