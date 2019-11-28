@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.relative">
-    <v-container :class="$style.verticalCenter">
+  <div class="login-container">
+    <v-container class="login-form">
       <div class="text-center mb-8">
         <v-icon size="67.5">mdi-shield-account</v-icon>
       </div>
@@ -29,9 +29,9 @@
         <v-btn class="mb-4" color="secondary" tile large block @click="loginWithEmail">
           Login
         </v-btn>
-        <v-btn class="mb-4" color="primary" tile large block @click="createAccount">
+        <!-- <v-btn class="mb-4" color="primary" tile large block @click="createAccount">
           Create account
-        </v-btn>
+        </v-btn> -->
       </v-form>
       <p class="text-center">Or</p>
       <v-btn
@@ -108,17 +108,17 @@ export default class Login extends Vue {
 }
 </script>
 
-<style lang="scss" module>
-.relative {
+<style lang="scss" scoped>
+.login-container {
   height: 100vh;
   position: relative;
 }
 
-.verticalCenter {
+.login-form {
   position: absolute;
   top: 35%;
-  left: 0;
-  transform: translate(0, -35%);
+  left: 50%;
+  transform: translate(-50%, -35%);
   width: 100%;
 }
 </style>

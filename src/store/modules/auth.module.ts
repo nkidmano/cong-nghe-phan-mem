@@ -24,7 +24,7 @@ const actions: ActionTree<IAuthState, IAuthState> = {
     }
   },
 
-  async logout({ commit }) {
+  logout({ commit }) {
     commit('SET_CURRENT_USER', null);
   },
 };
