@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-container class="pa-0">
     <v-navigation-drawer v-model="toggleDrawerFlag" width="165" app>
       <v-layout align-center justify-space-between column fill-height>
         <v-list style="margin-top: 75px" dense>
@@ -89,7 +89,23 @@
 
     <v-tabs-items v-model="currentTab">
       <v-tab-item value="tab-todo">
-        Todo List
+        <v-btn class="justify-start text-none" block x-large tile>
+          <v-icon class="mr-5" color="deep-orange darken-3" left large>mdi-gauge-full</v-icon>
+          <span>Refactor UI to new design</span>
+        </v-btn>
+        <v-divider></v-divider>
+
+        <v-btn class="justify-start text-none" block x-large tile>
+          <v-icon class="mr-5" color="amber darken-3" left large>mdi-gauge</v-icon>
+          <span>Make function list</span>
+        </v-btn>
+        <v-divider></v-divider>
+
+        <v-btn class="justify-start text-none" block x-large tile>
+          <v-icon class="mr-5" color="light-blue lighten-1" left large>mdi-gauge-empty</v-icon>
+          <span>Review code and write list of ...</span>
+        </v-btn>
+        <v-divider></v-divider>
       </v-tab-item>
       <v-tab-item value="tab-watch">
         Watch List
@@ -104,7 +120,7 @@
       @close="toggleCreateTodoDialog"
       @save="saveCreateTodoDialog"
     />
-  </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">
