@@ -18,7 +18,8 @@
           </v-row>
           <v-row no-gutters>
             <v-col class="time--text subtitle-1 font-weight-thin text-right" cols="5">
-              <span class="mr-1">Mins</span>
+              <!-- <span class="mr-1">Mins</span> -->
+              <span class="mr-1">{{ todo.name }}</span>
             </v-col>
             <v-col cols="2">&nbsp;</v-col>
             <v-col class="time--text subtitle-1 font-weight-thin" cols="5">
@@ -82,7 +83,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
-import TodoDialog from './TodoDialog'
+import TodoDialog from './TodoDialog.vue'
 import { FirebaseService, StorageService } from '@/services'
 
 @Component({
@@ -94,15 +95,15 @@ export default class BaseHeader extends Vue {
   private toggleDrawerFlag: boolean = false
   private showCreateTodoDialog: boolean = false
   // move task to store
-  private task = {}
+  private todo = {}
 
   private toggleCreateTodoDialog(): void {
     this.showCreateTodoDialog = !this.showCreateTodoDialog
   }
 
-  private saveCreateTodoDialog(task: object): void {
+  private saveCreateTodoDialog(todo: object): void {
     this.toggleCreateTodoDialog()
-    this.task = Object.assign({}, task)
+    this.todo = Object.assign({}, todo)
   }
 
   private async logout(): Promise<void> {

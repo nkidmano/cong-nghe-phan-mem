@@ -13,7 +13,7 @@ import Component from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 
-import BaseHeader from '@/components/BaseHeader'
+import BaseHeader from '@/components/BaseHeader.vue'
 import { StorageService, FirebaseService } from '@/services'
 
 @Component({

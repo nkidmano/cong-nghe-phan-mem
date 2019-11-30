@@ -1,44 +1,45 @@
 <template>
-  <v-dialog v-bind="$attrs" persistent max-width="320px">
+  <v-dialog v-bind="$attrs" persistent no-click-animation max-width="320px">
     <v-card>
       <v-card-title>
         <span class="headline">Create new todo</span>
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-text-field label="Task name" v-model="task.name"></v-text-field>
+          <v-text-field label="Task name" v-model="todo.name"></v-text-field>
           <v-textarea
             label="Description"
             rows="1"
             auto-grow
-            v-model="task.description"
+            v-model="todo.description"
           ></v-textarea>
           <v-select
-            v-model="task.priority"
+            v-model="todo.priority"
             :items="['High', 'Medium', 'Low']"
             label="Priority"
+            single-line
           ></v-select>
           <v-dialog
             ref="dialog"
             v-model="toggleDatePickerFlag"
-            :return-value.sync="task.date"
+            :return-value.sync="todo.date"
             persistent
             width="290px"
           >
             <template v-slot:activator="{ on }">
               <v-text-field
-                v-model="task.date"
+                v-model="todo.date"
                 label="Reminder"
                 readonly
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="task.date" scrollable>
+            <v-date-picker v-model="todo.date" scrollable>
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="toggleDatePickerFlag = false">
                 Cancel
               </v-btn>
-              <v-btn text color="primary" @click="$refs.dialog.save(task.date)">
+              <v-btn text color="primary" @click="$refs.dialog.save(todo.date)">
                 OK
               </v-btn>
             </v-date-picker>
@@ -64,29 +65,37 @@ import { Vue, Component, Emit, Prop } from 'vue-property-decorator'
 @Component
 export default class TodoDialog extends Vue {
   private toggleDatePickerFlag: boolean = false
-  private task: TodoItem = {
+  private todo: TodoItem = {
     name: '',
     priority: 'High',
     date: new Date().toISOString().substr(0, 10),
     description: '',
   }
 
-  private toggleFlag = {
-    todoDatePicker: false,
-  }
-
-  mounted() {
-    console.log(this.$attrs)
+  @Emit()
+  private close() {
+    this.clearForm()
   }
 
   @Emit()
-  close() {
-    return false
+  private save(): TodoItem {
+    const todo = Object.assign({}, this.todo)
+    setTimeout(() => {
+      todo.name = 'abc'
+      console.log(todo)
+    }, 1000)
+    this.clearForm()
+
+    return todo
   }
 
-  @Emit()
-  save() {
-    return this.task
+  private clearForm(): void {
+    this.todo = {
+      name: '',
+      priority: 'High',
+      date: new Date().toISOString().substr(0, 10),
+      description: '',
+    }
   }
 }
 
