@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:eslint": "eslint --fix --ext .js,.ts,.vue .",
     "lint:prettier": "prettier --config prettier.config.js --write \"**/*.{js,ts,json,css,scss,vue,html,md}\""
   },
   "dependencies": {
