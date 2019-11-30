@@ -1,24 +1,24 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-import routes from './routes';
-import store from '@/store';
-import { StorageService } from '@/services';
+import routes from './routes'
+import store from '@/store'
+import { StorageService } from '@/services'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-});
+})
 
 router.beforeEach((routeTo, routeFrom, next) => {
-  const authRequired = routeTo.matched.some((route) => route.meta.authRequired);
+  const authRequired = routeTo.matched.some((route) => route.meta.authRequired)
 
-  if (!authRequired) return next();
+  if (!authRequired) return next()
 
-  store.getters['auth/currentUser'] ? next() : next({ name: 'login' });
-});
+  store.getters['auth/currentUser'] ? next() : next({ name: 'login' })
+})
 
-export default router;
+export default router

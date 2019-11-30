@@ -59,41 +59,41 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
+import { Vue, Component, Emit, Prop } from 'vue-property-decorator'
 
 @Component
 export default class TodoDialog extends Vue {
-  private toggleDatePickerFlag: boolean = false;
+  private toggleDatePickerFlag: boolean = false
   private task: TodoItem = {
     name: '',
     priority: 'High',
     date: new Date().toISOString().substr(0, 10),
     description: '',
-  };
+  }
 
   private toggleFlag = {
     todoDatePicker: false,
-  };
+  }
 
   mounted() {
-    console.log(this.$attrs);
+    console.log(this.$attrs)
   }
 
   @Emit()
   close() {
-    return false;
+    return false
   }
 
   @Emit()
   save() {
-    return this.task;
+    return this.task
   }
 }
 
 interface TodoItem {
-  name: string;
-  priority: string;
-  date: string;
-  description: string;
+  name: string
+  priority: string
+  date: string
+  description: string
 }
 </script>

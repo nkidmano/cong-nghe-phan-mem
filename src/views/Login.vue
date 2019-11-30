@@ -23,9 +23,9 @@
           hide-details
           v-model="password"
         ></v-text-field>
-        <v-alert type="error" dismissible dense v-model="error.isShow">{{
-          error.message
-        }}</v-alert>
+        <v-alert type="error" dismissible dense v-model="error.isShow">
+          {{ error.message }}
+        </v-alert>
         <v-btn class="mb-4" color="secondary" tile large block @click="loginWithEmail">
           Login
         </v-btn>
@@ -53,57 +53,57 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { FirebaseService, StorageService } from '@/services';
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { FirebaseService, StorageService } from '@/services'
 
 @Component({})
 export default class Login extends Vue {
-  private email: string = '';
-  private password: string = '';
+  private email: string = ''
+  private password: string = ''
   private error: { message: string; isShow: boolean } = {
     message: '',
     isShow: false,
-  };
+  }
 
   private async loginWithEmail(): Promise<void> {
     try {
-      const credential = await FirebaseService.loginWithEmail(this.email, this.password);
-      StorageService.setToken(JSON.stringify(credential));
-      this.$store.commit('auth/SET_CURRENT_USER', credential);
+      const credential = await FirebaseService.loginWithEmail(this.email, this.password)
+      StorageService.setToken(JSON.stringify(credential))
+      this.$store.commit('auth/SET_CURRENT_USER', credential)
     } catch (error) {
-      this.clearForm();
-      this.showErrorAlert(error);
+      this.clearForm()
+      this.showErrorAlert(error)
     }
   }
 
   private async createAccount(): Promise<void> {
     try {
-      const credential = await FirebaseService.createAccount(this.email, this.password);
-      StorageService.setToken(JSON.stringify(credential));
-      this.$store.commit('auth/SET_CURRENT_USER', credential);
+      const credential = await FirebaseService.createAccount(this.email, this.password)
+      StorageService.setToken(JSON.stringify(credential))
+      this.$store.commit('auth/SET_CURRENT_USER', credential)
     } catch (error) {
-      this.clearForm();
-      this.showErrorAlert(error);
+      this.clearForm()
+      this.showErrorAlert(error)
     }
   }
 
   private clearForm(): void {
-    this.email = '';
-    this.password = '';
+    this.email = ''
+    this.password = ''
   }
 
   private showErrorAlert(message: string): void {
-    this.error.isShow = true;
-    this.error.message = message;
+    this.error.isShow = true
+    this.error.message = message
   }
 
   private async loginWithGoogle(): Promise<void> {
-    FirebaseService.loginWithGoogle();
+    FirebaseService.loginWithGoogle()
   }
 
   private async loginWithFacebook(): Promise<void> {
-    FirebaseService.loginWithFacebook();
+    FirebaseService.loginWithFacebook()
   }
 }
 </script>

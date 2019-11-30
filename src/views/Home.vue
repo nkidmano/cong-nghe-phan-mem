@@ -93,11 +93,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Vue from 'vue'
+import Component from 'vue-class-component'
 
-import TodoDialog from '@/components/TodoDialog.vue';
-import { FirebaseService, StorageService } from '@/services';
+import TodoDialog from '@/components/TodoDialog.vue'
+import { FirebaseService, StorageService } from '@/services'
 
 @Component({
   components: {
@@ -105,23 +105,23 @@ import { FirebaseService, StorageService } from '@/services';
   },
 })
 export default class Home extends Vue {
-  private toggleDawerFlag = null;
-  private showCreateTodoDialog = true;
-  private task = {};
+  private toggleDawerFlag = null
+  private showCreateTodoDialog = true
+  private task = {}
 
   private toggleCreateTodoDialog(): void {
-    this.showCreateTodoDialog = !this.showCreateTodoDialog;
+    this.showCreateTodoDialog = !this.showCreateTodoDialog
   }
 
   private saveCreateTodoDialog(task: object): void {
-    this.toggleCreateTodoDialog();
-    this.task = Object.assign({}, task);
+    this.toggleCreateTodoDialog()
+    this.task = Object.assign({}, task)
   }
 
   private async logout(): Promise<void> {
-    FirebaseService.logout();
-    StorageService.destroyToken();
-    this.$store.dispatch('auth/logout');
+    FirebaseService.logout()
+    StorageService.destroyToken()
+    this.$store.dispatch('auth/logout')
   }
 }
 </script>

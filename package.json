@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lint:prettier": "prettier --config prettier.config.js --write \"**/*.{js,ts,json,css,scss,vue,html,md}\""
   },
   "dependencies": {
     "@mdi/font": "^3.6.95",

@@ -14,30 +14,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Watch } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { Watch } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 
-import { StorageService, FirebaseService } from '@/services';
+import { StorageService, FirebaseService } from '@/services'
 
 @Component({})
 export default class App extends Vue {
   @Getter('auth/currentUser')
-  private currentUser!: object | null;
+  private currentUser!: object | null
 
   @Watch('currentUser')
   private onCurrentUserChange(currentUser: any): void {
     if (!currentUser) {
-      this.$router.push({ name: 'login' });
-      return;
+      this.$router.push({ name: 'login' })
+      return
     }
 
-    this.$router.push({ name: 'home' });
+    this.$router.push({ name: 'home' })
   }
 
   created() {
-    this.$store.dispatch('auth/init');
+    this.$store.dispatch('auth/init')
   }
 }
 </script>
