@@ -73,7 +73,7 @@
     <todo-dialog
       v-model="showCreateTodoDialog"
       @close="toggleCreateTodoDialog"
-      @save="saveCreateTodoDialog"
+      @save="toggleCreateTodoDialog"
     />
   </v-container>
 </template>
@@ -93,16 +93,9 @@ import { FirebaseService, StorageService } from '@/services'
 export default class BaseHeader extends Vue {
   private toggleDrawerFlag: boolean = false
   private showCreateTodoDialog: boolean = false
-  // move task to store
-  private todo = {}
 
   private toggleCreateTodoDialog(): void {
     this.showCreateTodoDialog = !this.showCreateTodoDialog
-  }
-
-  private saveCreateTodoDialog(todo: object): void {
-    this.toggleCreateTodoDialog()
-    this.todo = { ...todo }
   }
 
   private async logout(): Promise<void> {

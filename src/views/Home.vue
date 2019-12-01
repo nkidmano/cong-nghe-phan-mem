@@ -18,10 +18,10 @@
 
     <v-tabs-items v-model="currentTab">
       <v-tab-item value="tab-todo">
-        <template v-for="(todo, i) in enrichedTodos">
+        <template v-for="(todo, i) in todos">
           <v-btn :key="i" class="justify-start text-none" block x-large tile>
-            <v-icon class="mr-5" :color="todo.priorityIconColor" left large>
-              {{ todo.priorityIcon }}
+            <v-icon class="mr-5" :color="todo.priority.iconColor" left large>
+              {{ todo.priority.icon }}
             </v-icon>
             <span>{{ todo.name }}</span>
           </v-btn>
@@ -47,8 +47,8 @@ import { Getter } from 'vuex-class'
 
 @Component
 export default class Home extends Vue {
-  @Getter('task/getEnrichedTodos')
-  private enrichedTodos!: EnrichedTodo[]
+  @Getter('task/getTodos')
+  private todos!: Todo[]
 
   private currentTab = 'tab-todo'
 }

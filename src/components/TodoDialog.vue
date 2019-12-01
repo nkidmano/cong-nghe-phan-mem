@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
-import { Todo, EnrichedTodo, PriorityIcon, PriorityIconColor } from '@/models'
+import { Todo, EnrichedTodo, TodoPriority } from '@/models'
 
 @Component
 export default class TodoDialog extends Vue {
@@ -91,7 +91,7 @@ export default class TodoDialog extends Vue {
   private clearForm(): void {
     this.todo = {
       name: '',
-      priority: 'High',
+      priority: new TodoPriority('High'),
       date: new Date().toISOString().substr(0, 10),
       description: '',
     }

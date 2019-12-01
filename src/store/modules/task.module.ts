@@ -1,22 +1,22 @@
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex'
-import { ITaskState, Todo, EnrichedTodo, PriorityIcon, PriorityIconColor } from '@/models'
+import { ITaskState, Todo, EnrichedTodo, TodoPriority } from '@/models'
 
 const mockTodos: Todo[] = [
   {
     name: 'Refactor UI to new design',
-    priority: 'High',
+    priority: new TodoPriority('High'),
     date: new Date().toISOString().substr(0, 10),
     description: 'Refactor UI and modulize component in Home screen',
   },
   {
     name: 'Make function list',
-    priority: 'Medium',
+    priority: new TodoPriority('Medium'),
     date: new Date().toISOString().substr(0, 10),
     description: 'Lists of main functionality of Chat App',
   },
   {
     name: 'Review code',
-    priority: 'Low',
+    priority: new TodoPriority('Low'),
     date: new Date().toISOString().substr(0, 10),
     description: 'Review features/LAM_0001 code',
   },
@@ -56,35 +56,7 @@ const taskModule: Module<ITaskState, ITaskState> = {
 
 function enrichTodo(todo: Todo): EnrichedTodo {
   const result = { ...todo } as EnrichedTodo
-  result.priorityIcon = filterPriorityIcon(result)
-  result.priorityIconColor = filterPriorityIconColor(result)
   return result
-}
-
-function filterPriorityIcon(todo: Todo): PriorityIcon {
-  switch (todo.priority) {
-    case 'High':
-      return 'mdi-gauge-full'
-    case 'Medium':
-      return 'mdi-gauge'
-    case 'Low':
-      return 'mdi-gauge-empty'
-    default:
-      throw new Error('Unknown todo priority type')
-  }
-}
-
-function filterPriorityIconColor(todo: Todo): PriorityIconColor {
-  switch (todo.priority) {
-    case 'High':
-      return 'deep-orange darken-3'
-    case 'Medium':
-      return 'amber darken-3'
-    case 'Low':
-      return 'light-blue lighten-1'
-    default:
-      throw new Error('Unknown todo priority type')
-  }
 }
 
 export default taskModule
