@@ -18,8 +18,7 @@
           </v-row>
           <v-row no-gutters>
             <v-col class="time--text subtitle-1 font-weight-thin text-right" cols="5">
-              <!-- <span class="mr-1">Mins</span> -->
-              <span class="mr-1">{{ todo.name }}</span>
+              <span class="mr-1">Mins</span>
             </v-col>
             <v-col cols="2">&nbsp;</v-col>
             <v-col class="time--text subtitle-1 font-weight-thin" cols="5">

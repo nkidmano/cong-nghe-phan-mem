@@ -60,33 +60,31 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, Prop } from 'vue-property-decorator'
+import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class TodoDialog extends Vue {
   private toggleDatePickerFlag: boolean = false
   private todo: TodoItem = {
-    name: '',
+    name: 'Refactor UI to new design',
     priority: 'High',
     date: new Date().toISOString().substr(0, 10),
-    description: '',
+    description: 'Refactor UI and modulize component in Home screen',
+  }
+
+  @Watch('$attrs.value')
+  private onToggleDialog(show: boolean): void {
+    if (!show) this.clearForm()
   }
 
   @Emit()
-  private close() {
-    this.clearForm()
+  private close(): void {
+    return
   }
 
   @Emit()
   private save(): TodoItem {
-    const todo = Object.assign({}, this.todo)
-    setTimeout(() => {
-      todo.name = 'abc'
-      console.log(todo)
-    }, 1000)
-    this.clearForm()
-
-    return todo
+    return Object.assign({}, this.todo)
   }
 
   private clearForm(): void {
