@@ -33,7 +33,7 @@ const getters: GetterTree<IAuthState, IAuthState> = {
   currentUser: (state) => state.currentUser,
 }
 
-const authModules: Module<IAuthState, IAuthState> = {
+const authModule: Module<IAuthState, IAuthState> = {
   namespaced: true,
   state,
   mutations,
@@ -46,4 +46,4 @@ function getCurrentUser(): object | null {
   return currentUser ? JSON.parse(currentUser) : null
 }
 
-export default authModules
+export default authModule

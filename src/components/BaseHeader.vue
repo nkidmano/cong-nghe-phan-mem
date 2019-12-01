@@ -102,7 +102,7 @@ export default class BaseHeader extends Vue {
 
   private saveCreateTodoDialog(todo: object): void {
     this.toggleCreateTodoDialog()
-    this.todo = Object.assign({}, todo)
+    this.todo = { ...todo }
   }
 
   private async logout(): Promise<void> {

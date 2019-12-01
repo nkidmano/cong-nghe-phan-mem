@@ -61,15 +61,16 @@
 
 <script lang="ts">
 import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Todo, EnrichedTodo, PriorityIcon, PriorityIconColor } from '@/models'
 
 @Component
 export default class TodoDialog extends Vue {
   private toggleDatePickerFlag: boolean = false
-  private todo: TodoItem = {
-    name: 'Refactor UI to new design',
+  private todo: Todo = {
+    name: 'Refactor code for new design',
     priority: 'High',
     date: new Date().toISOString().substr(0, 10),
-    description: 'Refactor UI and modulize component in Home screen',
+    description: 'Refactor code and modulize component in Home screen',
   }
 
   @Watch('$attrs.value')
@@ -83,8 +84,8 @@ export default class TodoDialog extends Vue {
   }
 
   @Emit()
-  private save(): TodoItem {
-    return Object.assign({}, this.todo)
+  private save(): void {
+    this.$store.dispatch('task/setTodo', { ...this.todo })
   }
 
   private clearForm(): void {
@@ -95,12 +96,5 @@ export default class TodoDialog extends Vue {
       description: '',
     }
   }
-}
-
-interface TodoItem {
-  name: string
-  priority: string
-  date: string
-  description: string
 }
 </script>

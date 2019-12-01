@@ -18,24 +18,17 @@
 
     <v-tabs-items v-model="currentTab">
       <v-tab-item value="tab-todo">
-        <v-btn class="justify-start text-none" block x-large tile>
-          <v-icon class="mr-5" color="deep-orange darken-3" left large>mdi-gauge-full</v-icon>
-          <span>Refactor UI to new design</span>
-        </v-btn>
-        <v-divider></v-divider>
-
-        <v-btn class="justify-start text-none" block x-large tile>
-          <v-icon class="mr-5" color="amber darken-3" left large>mdi-gauge</v-icon>
-          <span>Make function list</span>
-        </v-btn>
-        <v-divider></v-divider>
-
-        <v-btn class="justify-start text-none" block x-large tile>
-          <v-icon class="mr-5" color="light-blue lighten-1" left large>mdi-gauge-empty</v-icon>
-          <span>Review code and write list of ...</span>
-        </v-btn>
-        <v-divider></v-divider>
+        <template v-for="(todo, i) in enrichedTodos">
+          <v-btn :key="i" class="justify-start text-none" block x-large tile>
+            <v-icon class="mr-5" :color="todo.priorityIconColor" left large>
+              {{ todo.priorityIcon }}
+            </v-icon>
+            <span>{{ todo.name }}</span>
+          </v-btn>
+          <v-divider :key="`v-divider-${i}`"></v-divider>
+        </template>
       </v-tab-item>
+
       <v-tab-item value="tab-watch">
         Watch List
       </v-tab-item>
@@ -49,9 +42,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Todo, EnrichedTodo } from '@/models'
+import { Getter } from 'vuex-class'
 
 @Component
 export default class Home extends Vue {
+  @Getter('task/getEnrichedTodos')
+  private enrichedTodos!: EnrichedTodo[]
+
   private currentTab = 'tab-todo'
 }
 </script>
