@@ -1,15 +1,15 @@
-const token = 'token'
+const user = 'currentUser'
 
 export default class StorageService {
-  public static getToken(): string | null {
-    return window.localStorage.getItem(token)
+  public static getCurrentUser(): string | null {
+    return localStorage.getItem(user)
   }
 
-  public static setToken(aToken: string) {
-    window.localStorage.setItem(token, aToken)
+  public static setCurrentUser(currentUser: string) {
+    localStorage.setItem(user, currentUser)
   }
 
-  public static destroyToken() {
-    window.localStorage.removeItem(token)
+  public static removeCurrentUser() {
+    localStorage.removeItem(user)
   }
 }

@@ -100,7 +100,7 @@ export default class BaseHeader extends Vue {
 
   private async logout(): Promise<void> {
     FirebaseService.logout()
-    StorageService.destroyToken()
+    StorageService.removeCurrentUser()
     this.$store.dispatch('auth/logout')
   }
 }

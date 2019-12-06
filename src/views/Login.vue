@@ -69,7 +69,7 @@ export default class Login extends Vue {
   private async loginWithEmail(): Promise<void> {
     try {
       const credential = await FirebaseService.loginWithEmail(this.email, this.password)
-      StorageService.setToken(JSON.stringify(credential))
+      StorageService.setCurrentUser(JSON.stringify(credential))
       this.$store.commit('auth/SET_CURRENT_USER', credential)
     } catch (error) {
       this.clearForm()
@@ -80,7 +80,7 @@ export default class Login extends Vue {
   private async createAccount(): Promise<void> {
     try {
       const credential = await FirebaseService.createAccount(this.email, this.password)
-      StorageService.setToken(JSON.stringify(credential))
+      StorageService.setCurrentUser(JSON.stringify(credential))
       this.$store.commit('auth/SET_CURRENT_USER', credential)
     } catch (error) {
       this.clearForm()

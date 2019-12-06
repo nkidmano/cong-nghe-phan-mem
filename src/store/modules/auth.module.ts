@@ -18,9 +18,9 @@ const mutations: MutationTree<IAuthState> = {
 const actions: ActionTree<IAuthState, IAuthState> = {
   async init({ commit }) {
     const credential = await FirebaseService.getLoginResult()
-    StorageService.setToken(JSON.stringify(credential))
     if (credential) {
       commit('SET_CURRENT_USER', credential)
+      StorageService.setCurrentUser(JSON.stringify(credential))
     }
   },
 
@@ -42,7 +42,7 @@ const authModule: Module<IAuthState, IAuthState> = {
 }
 
 function getCurrentUser(): object | null {
-  const currentUser = StorageService.getToken()
+  const currentUser = StorageService.getCurrentUser()
   return currentUser ? JSON.parse(currentUser) : null
 }
 
