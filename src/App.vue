@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <base-header v-if="currentUser" />
+    <base-header v-if="loggedIn" />
     <v-content>
       <router-view :key="$route.fullPath"></router-view>
     </v-content>
@@ -22,17 +22,16 @@ import { StorageService, FirebaseService } from '@/services'
   },
 })
 export default class App extends Vue {
-  @Getter('auth/currentUser')
-  private currentUser!: object | null
+  @Getter('auth/loggedIn')
+  private loggedIn!: object | null
 
-  @Watch('currentUser')
-  private onCurrentUserChange(currentUser: any): void {
-    if (!currentUser) {
+  @Watch('loggedIn')
+  private validateAuthState(loggedIn: any): void {
+    if (!loggedIn) {
       this.$router.push({ name: 'login' })
-      return
+    } else {
+      this.$router.push({ name: 'home' })
     }
-
-    this.$router.push({ name: 'home' })
   }
 
   created() {

@@ -10,26 +10,37 @@ const state: IAuthState = {
 }
 
 const mutations: MutationTree<IAuthState> = {
-  SET_CURRENT_USER(state, credential) {
-    state.currentUser = credential
+  SET_CURRENT_USER(state, value) {
+    state.currentUser = value
+    StorageService.setCurrentUser(JSON.stringify(value))
   },
 }
 
 const actions: ActionTree<IAuthState, IAuthState> = {
-  async init({ commit }) {
-    const credential = await FirebaseService.getLoginResult()
-    if (credential) {
-      commit('SET_CURRENT_USER', credential)
-      StorageService.setCurrentUser(JSON.stringify(credential))
-    }
+  async init({ commit, state }): Promise<void> {
+    if (state.currentUser) return
+
+    const user = await FirebaseService.getLoginResult()
+    if (user) commit('SET_CURRENT_USER', user)
   },
 
-  logout({ commit }) {
+  async loginWithEmail({ commit }, { email, password }): Promise<void> {
+    const user = await FirebaseService.loginWithEmail(email, password)
+    commit('SET_CURRENT_USER', user)
+  },
+
+  async createAccount({ commit }, { email, password }): Promise<void> {
+    const user = await FirebaseService.createAccount(email, password)
+    commit('SET_CURRENT_USER', user)
+  },
+
+  logout({ commit }): void {
     commit('SET_CURRENT_USER', null)
   },
 }
 
 const getters: GetterTree<IAuthState, IAuthState> = {
+  loggedIn: (state) => !!state.currentUser,
   currentUser: (state) => state.currentUser,
 }
 
