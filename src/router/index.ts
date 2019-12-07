@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import NProgress from 'nprogress'
 
 import routes from './routes'
 import store from '@/store'
@@ -18,6 +19,18 @@ router.beforeEach((routeTo, routeFrom, next) => {
   if (!authRequired) return next()
 
   store.getters['auth/currentUser'] ? next() : next({ name: 'login' })
+})
+
+router.beforeResolve((routeTo, routeFrom, next) => {
+  if (routeTo.name) {
+    NProgress.start()
+  }
+
+  next()
+})
+
+router.afterEach((routeTo, routeFrom) => {
+  NProgress.done()
 })
 
 export default router
