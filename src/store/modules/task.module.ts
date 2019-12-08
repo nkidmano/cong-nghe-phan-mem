@@ -1,42 +1,40 @@
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex'
 import { ITaskState, Todo, EnrichedTodo, TodoPriority } from '@/models'
-
-const mockTodos: Todo[] = [
-  {
-    name: 'Refactor UI to new design',
-    priority: new TodoPriority('High'),
-    date: new Date().toISOString().substr(0, 10),
-    description: 'Refactor UI and modulize component in Home screen',
-  },
-  {
-    name: 'Make function list',
-    priority: new TodoPriority('Medium'),
-    date: new Date().toISOString().substr(0, 10),
-    description: 'Lists of main functionality of Chat App',
-  },
-  {
-    name: 'Review code',
-    priority: new TodoPriority('Low'),
-    date: new Date().toISOString().substr(0, 10),
-    description: 'Review features/LAM_0001 code',
-  },
-]
+import { db } from '@/services'
 
 const state: ITaskState = {
-  todos: [...mockTodos],
+  todos: [],
   watches: [],
   laters: [],
 }
 
 const mutations: MutationTree<ITaskState> = {
+  // TODO refactor SET_TODOS and SET_TODO
+  SET_TODOS(state: ITaskState, todos: Todo[]) {
+    state.todos = todos
+  },
+  // TODO refactor SET_TODOS and SET_TODO
   SET_TODO(state: ITaskState, todo: Todo): void {
-    state.todos = [...state.todos, todo]
+    state.todos.push(todo)
+  },
+  REMOVE_TODO(state: ITaskState, todo: Todo): void {
+    state.todos = state.todos.filter((t) => t.name !== todo.name)
   },
 }
 
 const actions: ActionTree<ITaskState, ITaskState> = {
-  setTodo({ commit }, todo: Todo): void {
-    commit('SET_TODO', todo)
+  setTodos({ commit }, todos: Todo[]) {
+    commit('SET_TODOS', todos)
+  },
+
+  setTodo({ commit }, todo: Todo) {
+    try {
+      commit('SET_TODO', todo)
+      db.collection('todos').add(todo)
+    } catch (error) {
+      commit('REMOVE_TODO', todo)
+      return Promise.reject('Unexpected error, please try again later')
+    }
   },
 }
 

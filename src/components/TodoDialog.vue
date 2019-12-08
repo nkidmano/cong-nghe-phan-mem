@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-bind="$attrs" persistent no-click-animation max-width="320px">
+  <v-dialog v-model="value" persistent no-click-animation max-width="320px">
     <v-card>
       <v-card-title>
         <span class="headline">Create new todo</span>
@@ -48,10 +48,10 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="close">
-          Close
+        <v-btn color="error" text @click="handleCancelClick">
+          Cancel
         </v-btn>
-        <v-btn color="blue darken-1" text @click="save">
+        <v-btn color="primary" @click="handleSaveClick">
           Save
         </v-btn>
       </v-card-actions>
@@ -60,38 +60,40 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Todo, EnrichedTodo, TodoPriority } from '@/models'
 
 @Component
 export default class TodoDialog extends Vue {
+  @Prop() private value!: boolean
+
   private toggleDatePickerFlag: boolean = false
   private todo: Todo = {
-    name: 'Refactor code for new design',
+    name: '',
     priority: 'High',
     date: new Date().toISOString().substr(0, 10),
-    description: 'Refactor code and modulize component in Home screen',
+    description: '',
   }
 
-  @Watch('$attrs.value')
-  private onToggleDialog(show: boolean): void {
-    if (!show) this.clearForm()
+  private handleSaveClick(): void {
+    this.$emit('save', { ...this.todo })
+    this.clearForm()
+    this.closeDialog()
   }
 
-  @Emit()
-  private close(): void {
-    return
+  private handleCancelClick(): void {
+    this.clearForm()
+    this.closeDialog()
   }
 
-  @Emit()
-  private save(): void {
-    this.$store.dispatch('task/setTodo', { ...this.todo })
+  private closeDialog(): void {
+    this.$emit('input', false)
   }
 
   private clearForm(): void {
     this.todo = {
       name: '',
-      priority: new TodoPriority('High'),
+      priority: 'High',
       date: new Date().toISOString().substr(0, 10),
       description: '',
     }

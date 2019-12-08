@@ -14,6 +14,10 @@ const mutations: MutationTree<IAuthState> = {
     state.currentUser = value
     StorageService.setCurrentUser(JSON.stringify(value))
   },
+  REMOVE_CURRENT_USER(state, value) {
+    state.currentUser = null
+    StorageService.removeCurrentUser()
+  },
 }
 
 const actions: ActionTree<IAuthState, IAuthState> = {
@@ -34,8 +38,9 @@ const actions: ActionTree<IAuthState, IAuthState> = {
     commit('SET_CURRENT_USER', user)
   },
 
-  logout({ commit }): void {
-    commit('SET_CURRENT_USER', null)
+  async logout({ commit }): Promise<void> {
+    await FirebaseService.logout()
+    commit('REMOVE_CURRENT_USER', null)
   },
 }
 

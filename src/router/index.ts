@@ -18,7 +18,7 @@ router.beforeEach((routeTo, routeFrom, next) => {
 
   if (!authRequired) return next()
 
-  store.getters['auth/currentUser'] ? next() : next({ name: 'login' })
+  store.getters['auth/loggedIn'] ? next() : next({ name: 'login' })
 })
 
 router.beforeResolve((routeTo, routeFrom, next) => {

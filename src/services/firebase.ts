@@ -22,7 +22,7 @@ type UserCredential = {
   user: firebase.User | null
 }
 
-export default class FirebaseService {
+export class FirebaseService {
   public static getLoginResult(): Promise<UserCredential | null> {
     return firebase
       .auth()
@@ -92,3 +92,5 @@ export default class FirebaseService {
     return firebase.auth().signOut()
   }
 }
+
+export const db = firebase.firestore()

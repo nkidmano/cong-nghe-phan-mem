@@ -7,7 +7,7 @@ const routes: RouteConfig[] = [
     name: 'login',
     component: () => import('@/views/Login.vue'),
     beforeEnter: (routeTo, routeFrom, next) => {
-      store.getters['auth/currentUser'] ? next({ name: 'home' }) : next()
+      store.getters['auth/loggedIn'] ? next({ name: 'home' }) : next()
     },
   },
   {

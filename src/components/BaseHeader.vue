@@ -6,7 +6,7 @@
       <v-toolbar-title>Working Task</v-toolbar-title>
       <v-spacer />
       <v-btn icon>
-        <v-icon @click.stop="toggleCreateTodoDialog">mdi-plus</v-icon>
+        <v-icon @click.stop="showCreateTodoDialog = true">mdi-plus</v-icon>
       </v-btn>
 
       <template v-slot:extension>
@@ -70,11 +70,19 @@
       </v-layout>
     </v-navigation-drawer>
 
-    <todo-dialog
-      v-model="showCreateTodoDialog"
-      @close="toggleCreateTodoDialog"
-      @save="toggleCreateTodoDialog"
-    />
+    <todo-dialog v-model="showCreateTodoDialog" @save="handleSaveClick" />
+
+    <v-snackbar
+      v-model="snackbar.show"
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      top
+    >
+      {{ snackbar.message }}
+      <v-btn text @click="snackbar.show = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -84,6 +92,7 @@ import Component from 'vue-class-component'
 
 import TodoDialog from './TodoDialog.vue'
 import { FirebaseService, StorageService } from '@/services'
+import { Todo, TodoPriority } from '../models'
 
 @Component({
   components: {
@@ -93,14 +102,27 @@ import { FirebaseService, StorageService } from '@/services'
 export default class BaseHeader extends Vue {
   private toggleDrawerFlag: boolean = false
   private showCreateTodoDialog: boolean = false
+  private snackbar: { show: boolean; timeout: number; color: string; message: string } = {
+    show: false,
+    timeout: 3000,
+    color: '',
+    message: '',
+  }
 
-  private toggleCreateTodoDialog(): void {
-    this.showCreateTodoDialog = !this.showCreateTodoDialog
+  private async handleSaveClick(todo: Todo): Promise<void> {
+    this.showSnackbar('success', 'Yay, new thing todo !!!')
+    this.$store.dispatch('task/setTodo', { ...todo }).catch((error: string) => {
+      this.showSnackbar('error', error)
+    })
+  }
+
+  private showSnackbar(type: string, message: string): void {
+    this.snackbar.show = true
+    this.snackbar.color = type
+    this.snackbar.message = message
   }
 
   private async logout(): Promise<void> {
-    FirebaseService.logout()
-    StorageService.removeCurrentUser()
     this.$store.dispatch('auth/logout')
   }
 }
