@@ -1,49 +1,36 @@
 export interface Todo {
   name: string
-  priority: TodoPriority | TodoPriorityType
+  priority: TodoPriorityType
   date: string
   description: string
 }
 
-export interface EnrichedTodo extends Todo {}
+export enum TodoPriorityType {
+  High = 'High',
+  Medium = 'Medium',
+  Low = 'Low',
+}
 
-export type TodoPriorityType = 'High' | 'Medium' | 'Low'
-export type TodoPriorityIconType = 'mdi-gauge-full' | 'mdi-gauge' | 'mdi-gauge-empty'
-export type TodoPriorityIconColorType =
-  | 'deep-orange darken-3'
-  | 'amber darken-3'
-  | 'light-blue lighten-1'
+export enum TodoPriorityIconType {
+  High = 'mdi-gauge-full',
+  Medium = 'mdi-gauge',
+  Low = 'mdi-gauge-empty',
+}
+
+export enum TodoPriorityIconColorType {
+  High = 'deep-orange darken-3',
+  Medium = 'amber darken-3',
+  Low = 'light-blue lighten-1',
+}
 
 export class TodoPriority {
-  private priority: TodoPriorityType
+  public readonly type: TodoPriorityType
+  public readonly icon: TodoPriorityIconType
+  public readonly iconColor: TodoPriorityIconColorType
 
   constructor(priority: TodoPriorityType) {
-    this.priority = priority
-  }
-
-  public toString(): string {
-    return this.priority
-  }
-
-  public get icon(): TodoPriorityIconType {
-    switch (this.priority) {
-      case 'High':
-        return 'mdi-gauge-full'
-      case 'Medium':
-        return 'mdi-gauge'
-      default:
-        return 'mdi-gauge-empty'
-    }
-  }
-
-  public get iconColor(): TodoPriorityIconColorType {
-    switch (this.priority) {
-      case 'High':
-        return 'deep-orange darken-3'
-      case 'Medium':
-        return 'amber darken-3'
-      default:
-        return 'light-blue lighten-1'
-    }
+    this.type = priority
+    this.icon = TodoPriorityIconType[priority]
+    this.iconColor = TodoPriorityIconColorType[priority]
   }
 }

@@ -24,14 +24,13 @@ new Vue({
 
       const todos = []
       for (const change of changes) {
-        if (change.type === 'added') {
-          todos.push({
-            id: change.doc.id,
-            ...change.doc.data(),
-          })
-        }
+        todos.push({
+          id: change.doc.id,
+          ...change.doc.data(),
+        })
       }
-
+      // TODO fix bug
+      // error occur when add new todo
       store.dispatch('task/setTodos', todos)
     })
   },

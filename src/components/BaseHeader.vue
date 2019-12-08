@@ -92,7 +92,7 @@ import Component from 'vue-class-component'
 
 import TodoDialog from './TodoDialog.vue'
 import { FirebaseService, StorageService } from '@/services'
-import { Todo, TodoPriority } from '../models'
+import { Todo } from '@/models'
 
 @Component({
   components: {

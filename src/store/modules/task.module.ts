@@ -1,5 +1,5 @@
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex'
-import { ITaskState, Todo, EnrichedTodo, TodoPriority } from '@/models'
+import { ITaskState, Todo, TodoPriority, TodoPriorityType } from '@/models'
 import { db } from '@/services'
 
 const state: ITaskState = {
@@ -40,8 +40,8 @@ const actions: ActionTree<ITaskState, ITaskState> = {
 
 const getters: GetterTree<ITaskState, ITaskState> = {
   getTodos: (state: ITaskState): Todo[] => state.todos,
-  getEnrichedTodos: (state: ITaskState): EnrichedTodo[] =>
-    state.todos.map((todo: Todo) => enrichTodo(todo)),
+  getEnrichedTodos: (state: ITaskState) =>
+    state.todos.map((todo) => ({ ...todo, priority: new TodoPriority(todo.priority) })),
 }
 
 const taskModule: Module<ITaskState, ITaskState> = {
@@ -50,11 +50,6 @@ const taskModule: Module<ITaskState, ITaskState> = {
   mutations,
   actions,
   getters,
-}
-
-function enrichTodo(todo: Todo): EnrichedTodo {
-  const result = { ...todo } as EnrichedTodo
-  return result
 }
 
 export default taskModule

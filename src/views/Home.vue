@@ -42,13 +42,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { Todo, EnrichedTodo } from '@/models'
+import { Todo } from '@/models'
 import { Getter } from 'vuex-class'
 import { db } from '@/services'
 
 @Component
 export default class Home extends Vue {
-  @Getter('task/getTodos')
+  @Getter('task/getEnrichedTodos')
   private todos!: Todo[]
 
   private currentTab: string = 'tab-todo'

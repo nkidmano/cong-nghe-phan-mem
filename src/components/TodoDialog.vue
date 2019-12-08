@@ -15,7 +15,7 @@
           ></v-textarea>
           <v-select
             v-model="todo.priority"
-            :items="['High', 'Medium', 'Low']"
+            :items="todoPriorities"
             label="Priority"
             single-line
           ></v-select>
@@ -61,16 +61,17 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Todo, EnrichedTodo, TodoPriority } from '@/models'
+import { Todo, TodoPriorityType } from '@/models'
 
 @Component
 export default class TodoDialog extends Vue {
   @Prop() private value!: boolean
 
   private toggleDatePickerFlag: boolean = false
+  private todoPriorities = Object.keys(TodoPriorityType)
   private todo: Todo = {
     name: '',
-    priority: 'High',
+    priority: TodoPriorityType.High,
     date: new Date().toISOString().substr(0, 10),
     description: '',
   }
@@ -93,7 +94,7 @@ export default class TodoDialog extends Vue {
   private clearForm(): void {
     this.todo = {
       name: '',
-      priority: 'High',
+      priority: TodoPriorityType.High,
       date: new Date().toISOString().substr(0, 10),
       description: '',
     }
