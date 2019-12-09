@@ -27,6 +27,8 @@ const mutations: MutationTree<ITaskState> = {
 
 const actions: ActionTree<ITaskState, ITaskState> = {
   getTodos: async ({ commit }) => {
+    // remove db
+    // add FirestoreService
     const querySnapshot = await db.collection('todos').get()
     const todos = querySnapshot.docs.map((doc) => doc.data())
     commit('SET_TODOS', todos)
@@ -34,6 +36,8 @@ const actions: ActionTree<ITaskState, ITaskState> = {
 
   setTodo: async ({ commit }, todo: Todo) => {
     try {
+      // remove db
+      // add FirestoreService
       commit('SET_TODO', todo)
       db.collection('todos').add(todo)
     } catch (error) {

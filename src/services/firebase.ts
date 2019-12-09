@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { Todo } from '@/models'
 
 firebase.initializeApp({
   apiKey: 'AIzaSyAHjtTJw9NRWiRaRoqZP1b4zn4fnVXkPCg',
@@ -11,6 +12,7 @@ firebase.initializeApp({
   messagingSenderId: '795856584302',
   appId: '1:795856584302:web:0e96e9357ed386e61e307f',
 })
+export const db = firebase.firestore()
 
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
@@ -23,15 +25,14 @@ type UserCredential = {
 }
 
 export class FirebaseService {
-  public static getLoginResult(): Promise<UserCredential | null> {
-    return firebase
-      .auth()
-      .getRedirectResult()
-      .then((credential) => (credential.user ? credential : null))
-      .catch((error) => {
-        console.warn(error)
-        return null
-      })
+  public static async getLoginResult(): Promise<UserCredential | null> {
+    try {
+      const credential = await firebase.auth().getRedirectResult()
+      return credential.user ? credential : null
+    } catch (error) {
+      console.warn(error)
+      return null
+    }
   }
 
   public static loginWithGoogle(): Promise<void> {
@@ -42,50 +43,42 @@ export class FirebaseService {
     return firebase.auth().signInWithRedirect(facebookAuthProvider)
   }
 
-  public static loginWithEmail(
+  public static async loginWithEmail(
     email: string,
     password: string
   ): Promise<UserCredential | string> {
-    return firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((credential) => credential)
-      .catch((error) => {
-        console.warn(error)
-
-        if (error.code === 'auth/user-disabled') {
-          return Promise.reject('Account has been disabled')
-        }
-
-        return Promise.reject('Invalid email or password')
-      })
+    try {
+      const credential = await firebase.auth().signInWithEmailAndPassword(email, password)
+      return credential
+    } catch (error) {
+      console.warn(error)
+      if (error.code === 'auth/user-disabled') {
+        return Promise.reject('Account has been disabled')
+      }
+      return Promise.reject('Invalid email or password')
+    }
   }
 
-  public static createAccount(
+  public static async createAccount(
     email: string,
     password: string
   ): Promise<UserCredential | string> {
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((credential) => credential)
-      .catch((error) => {
-        console.warn(error)
-
-        if (error.code === 'auth/email-already-in-use') {
-          return Promise.reject('Email already in use')
-        }
-
-        if (error.code === 'auth/invalid-email') {
-          return Promise.reject('Invalid email')
-        }
-
-        if (error.code === 'auth/weak-password') {
-          return Promise.reject('Invalid email')
-        }
-
-        return Promise.reject('Unexpected error, please try again later')
-      })
+    try {
+      const credential = await firebase.auth().createUserWithEmailAndPassword(email, password)
+      return credential
+    } catch (error) {
+      console.warn(error)
+      if (error.code === 'auth/email-already-in-use') {
+        return Promise.reject('Email already in use')
+      }
+      if (error.code === 'auth/invalid-email') {
+        return Promise.reject('Invalid email')
+      }
+      if (error.code === 'auth/weak-password') {
+        return Promise.reject('Invalid email')
+      }
+      return Promise.reject('Unexpected error, please try again later')
+    }
   }
 
   public static logout(): Promise<void> {
@@ -93,4 +86,17 @@ export class FirebaseService {
   }
 }
 
-export const db = firebase.firestore()
+export class FirestoreService {
+  public static async getTodos(): Promise<Todo[]> {
+    const querySnapshot = await db.collection('todos').get()
+    return querySnapshot.docs.map((doc) => doc.data()) as Todo[]
+  }
+
+  public static async addTodo(todo: Todo): Promise<void> {
+    try {
+      db.collection('todos').add(todo)
+    } catch (error) {
+      return Promise.reject('Unexpected error, please try again later')
+    }
+  }
+}
