@@ -1,6 +1,7 @@
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex'
-import { ITaskState, Todo, TodoPriority, TodoPriorityType } from '@/models'
+import { ITaskState, Todo, TodoPriority } from '@/models'
 import { db } from '@/services'
+import { vuexfireMutations, firestoreAction } from 'vuexfire'
 
 const state: ITaskState = {
   todos: [],
@@ -20,14 +21,18 @@ const mutations: MutationTree<ITaskState> = {
   REMOVE_TODO(state: ITaskState, todo: Todo): void {
     state.todos = state.todos.filter((t) => t.name !== todo.name)
   },
+
+  ...vuexfireMutations,
 }
 
 const actions: ActionTree<ITaskState, ITaskState> = {
-  setTodos({ commit }, todos: Todo[]) {
+  getTodos: async ({ commit }) => {
+    const querySnapshot = await db.collection('todos').get()
+    const todos = querySnapshot.docs.map((doc) => doc.data())
     commit('SET_TODOS', todos)
   },
 
-  setTodo({ commit }, todo: Todo) {
+  setTodo: async ({ commit }, todo: Todo) => {
     try {
       commit('SET_TODO', todo)
       db.collection('todos').add(todo)

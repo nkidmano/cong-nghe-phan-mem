@@ -45,8 +45,14 @@ import Component from 'vue-class-component'
 import { Todo } from '@/models'
 import { Getter } from 'vuex-class'
 import { db } from '@/services'
+import store from '@/store'
 
-@Component
+@Component({
+  beforeRouteEnter: async (routeTo, routeFrom, next) => {
+    await store.dispatch('task/getTodos')
+    next()
+  },
+})
 export default class Home extends Vue {
   @Getter('task/getEnrichedTodos')
   private todos!: Todo[]
