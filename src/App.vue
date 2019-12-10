@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <base-header v-if="loggedIn" />
+    <base-header v-if="!loggedIn" />
     <v-content>
       <router-view :key="$route.fullPath"></router-view>
     </v-content>

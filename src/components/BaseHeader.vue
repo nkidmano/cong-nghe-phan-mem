@@ -1,15 +1,15 @@
 <template>
   <v-container class="pa-0">
     <v-app-bar app extension-height="150" dark flat color="grey darken-2">
-      <v-app-bar-nav-icon @click.stop="toggleDrawerFlag = !toggleDrawerFlag" />
+      <v-app-bar-nav-icon @click.stop="showDrawer = !showDrawer" />
       <v-spacer />
-      <v-toolbar-title>Working Task</v-toolbar-title>
+      <v-toolbar-title>{{ $route.meta.viewName }}</v-toolbar-title>
       <v-spacer />
       <v-btn icon>
         <v-icon @click.stop="showCreateTodoDialog = true">mdi-plus</v-icon>
       </v-btn>
 
-      <template v-slot:extension>
+      <template v-if="showTimer" v-slot:extension>
         <v-container class="pa-0">
           <v-row class="mb-1" no-gutters>
             <v-col class="display-3 font-weight-bold text-right" cols="5">09</v-col>
@@ -29,7 +29,7 @@
       </template>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="toggleDrawerFlag" width="165" app>
+    <v-navigation-drawer v-model="showDrawer" width="165" app>
       <v-layout align-center justify-space-between column fill-height>
         <v-list style="margin-top: 75px" dense>
           <v-list-item class="mb-5">
@@ -45,7 +45,7 @@
           </v-list-item>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>List</v-list-item-title>
+              <v-list-item-title>History</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -97,6 +97,8 @@ import Component from 'vue-class-component'
 import TodoDialog from './TodoDialog.vue'
 import { FirebaseService, StorageService } from '@/services'
 import { Todo } from '@/models'
+import { Watch } from 'vue-property-decorator'
+import { Route } from 'vue-router'
 
 @Component({
   components: {
@@ -104,13 +106,23 @@ import { Todo } from '@/models'
   },
 })
 export default class BaseHeader extends Vue {
-  private toggleDrawerFlag: boolean = false
+  private showTimer: boolean = false
+  private showDrawer: boolean = false
   private showCreateTodoDialog: boolean = false
   private snackbar: { show: boolean; timeout: number; color: string; message: string } = {
     show: false,
     timeout: 3000,
     color: '',
     message: '',
+  }
+
+  @Watch('$route')
+  private onRouteChange(route: Route): void {
+    if (route.name !== 'home') {
+      this.showTimer = false
+    } else {
+      this.showTimer = true
+    }
   }
 
   private async handleSaveClick(todo: Todo): Promise<void> {

@@ -16,6 +16,7 @@ const routes: RouteConfig[] = [
     component: () => import('@/views/Home.vue'),
     meta: {
       authRequired: true,
+      viewName: 'Working Tasks',
     },
   },
   {
@@ -25,6 +26,7 @@ const routes: RouteConfig[] = [
     meta: {
       // TODO change authRequired to true
       authRequired: false,
+      viewName: 'Settings',
     },
   },
   {
