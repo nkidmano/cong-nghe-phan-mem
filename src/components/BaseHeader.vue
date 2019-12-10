@@ -63,7 +63,11 @@
         <v-list style="margin-bottom: 60px" dense>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>Logout</v-list-item-title>
+              <v-list-item-action>
+                <v-btn class="text-none" @click="logout" text>
+                  Logout
+                </v-btn>
+              </v-list-item-action>
             </v-list-item-content>
           </v-list-item>
         </v-list>

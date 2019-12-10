@@ -19,6 +19,15 @@ const routes: RouteConfig[] = [
     },
   },
   {
+    path: '/setting',
+    name: 'setting',
+    component: () => import('@/views/Setting.vue'),
+    meta: {
+      // TODO change authRequired to true
+      authRequired: false,
+    },
+  },
+  {
     path: '*',
     redirect: { name: 'home' },
   },
