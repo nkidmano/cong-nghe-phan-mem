@@ -85,18 +85,3 @@ export class FirebaseService {
     return firebase.auth().signOut()
   }
 }
-
-export class FirestoreService {
-  public static async getTodos(): Promise<Todo[]> {
-    const querySnapshot = await db.collection('todos').get()
-    return querySnapshot.docs.map((doc) => doc.data()) as Todo[]
-  }
-
-  public static async addTodo(todo: Todo): Promise<void> {
-    try {
-      db.collection('todos').add(todo)
-    } catch (error) {
-      return Promise.reject('Unexpected error, please try again later')
-    }
-  }
-}
