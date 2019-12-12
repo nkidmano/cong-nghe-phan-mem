@@ -26,12 +26,12 @@
         <v-alert type="error" dismissible dense v-model="error.isShow">
           {{ error.message }}
         </v-alert>
-        <v-btn class="mb-4" color="secondary" tile large block @click="loginWithEmail">
+        <v-btn class="mb-4" color="secondary" tile large block @click="handleLoginClick">
           Login
         </v-btn>
-        <!-- <v-btn class="mb-4" color="primary" tile large block @click="createAccount">
+        <v-btn class="mb-4" color="primary" tile large block @click="handleSignupClick">
           Create account
-        </v-btn> -->
+        </v-btn>
       </v-form>
       <p class="text-center">Or</p>
       <v-btn
@@ -41,11 +41,18 @@
         outlined
         large
         block
-        @click="loginWithGoogle"
+        @click="handleLoginWithGoogleClick"
       >
         Login with Google
       </v-btn>
-      <v-btn color="secondary" rounded outlined large block @click="loginWithFacebook">
+      <v-btn
+        color="secondary"
+        rounded
+        outlined
+        large
+        block
+        @click="handleLoginWithFacebookClick"
+      >
         Login with Facebook
       </v-btn>
     </v-container>
@@ -66,7 +73,7 @@ export default class Login extends Vue {
     isShow: false,
   }
 
-  private async loginWithEmail(): Promise<void> {
+  private async handleLoginClick(): Promise<void> {
     this.$store
       .dispatch('auth/loginWithEmail', {
         email: this.email,
@@ -78,7 +85,7 @@ export default class Login extends Vue {
       })
   }
 
-  private async createAccount(): Promise<void> {
+  private async handleSignupClick(): Promise<void> {
     this.$store
       .dispatch('auth/createAccount', {
         email: this.email,
@@ -100,11 +107,11 @@ export default class Login extends Vue {
     this.error.message = message
   }
 
-  private async loginWithGoogle(): Promise<void> {
+  private handleLoginWithGoogleClick(): void {
     FirebaseService.loginWithGoogle()
   }
 
-  private async loginWithFacebook(): Promise<void> {
+  private handleLoginWithFacebookClick(): void {
     FirebaseService.loginWithFacebook()
   }
 }

@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { Todo } from '@/models'
+import store from '@/store'
 
 firebase.initializeApp({
   apiKey: 'AIzaSyAHjtTJw9NRWiRaRoqZP1b4zn4fnVXkPCg',
@@ -25,6 +25,26 @@ type UserCredential = {
 }
 
 export class FirebaseService {
+  public static onAuthStateChanged(): void {
+    firebase.auth().onAuthStateChanged(async (currentUser) => {
+      if (currentUser) {
+        if (!currentUser.emailVerified) {
+          currentUser.sendEmailVerification()
+          return
+        }
+
+        const profile = {
+          name: currentUser.displayName,
+          email: currentUser.email,
+          uid: currentUser.uid,
+          idToken: await currentUser.getIdToken(true),
+        }
+
+        store.commit('auth/SET_CURRENT_USER', profile)
+      }
+    })
+  }
+
   public static async getLoginResult(): Promise<UserCredential | null> {
     try {
       const credential = await firebase.auth().getRedirectResult()

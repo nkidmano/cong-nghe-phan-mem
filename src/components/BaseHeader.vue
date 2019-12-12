@@ -40,7 +40,11 @@
 
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>Home</v-list-item-title>
+              <v-list-item-action>
+                <v-btn class="text-none" @click="$router.push({ name: 'home' })" text>
+                  Home
+                </v-btn>
+              </v-list-item-action>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -55,7 +59,11 @@
           </v-list-item>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>Settings</v-list-item-title>
+              <v-list-item-action>
+                <v-btn class="text-none" @click="$router.push({ name: 'setting' })" text>
+                  Setting
+                </v-btn>
+              </v-list-item-action>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -99,6 +107,7 @@ import { FirebaseService, StorageService } from '@/services'
 import { Todo } from '@/models'
 import { Watch } from 'vue-property-decorator'
 import { Route } from 'vue-router'
+import { Getter } from 'vuex-class'
 
 @Component({
   components: {
@@ -116,7 +125,10 @@ export default class BaseHeader extends Vue {
     message: '',
   }
 
-  @Watch('$route')
+  @Getter('auth/loggedIn')
+  private loggedIn!: boolean
+
+  @Watch('$route', { immediate: true })
   private onRouteChange(route: Route): void {
     if (route.name !== 'home') {
       this.showTimer = false

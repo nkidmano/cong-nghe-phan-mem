@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <base-header v-if="!loggedIn" />
+    <base-header v-if="loggedIn" />
     <v-content>
       <router-view :key="$route.fullPath"></router-view>
     </v-content>
@@ -35,7 +35,9 @@ export default class App extends Vue {
   }
 
   created() {
-    this.$store.dispatch('auth/init')
+    this.$store.dispatch('auth/init').catch((error: string) => {
+      alert('You already have an account, ' + error)
+    })
   }
 }
 </script>

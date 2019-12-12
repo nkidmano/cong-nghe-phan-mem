@@ -22,10 +22,8 @@ const mutations: MutationTree<IAuthState> = {
 
 const actions: ActionTree<IAuthState, IAuthState> = {
   async init({ commit, state }): Promise<void> {
-    if (state.currentUser) return
-
-    const user = await FirebaseService.getLoginResult()
-    if (user) commit('SET_CURRENT_USER', user)
+    FirebaseService.onAuthStateChanged()
+    await FirebaseService.getLoginResult()
   },
 
   async loginWithEmail({ commit }, { email, password }): Promise<void> {

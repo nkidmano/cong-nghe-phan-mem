@@ -24,8 +24,7 @@ const routes: RouteConfig[] = [
     name: 'setting',
     component: () => import('@/views/Setting.vue'),
     meta: {
-      // TODO change authRequired to true
-      authRequired: false,
+      authRequired: true,
       viewName: 'Settings',
     },
   },
