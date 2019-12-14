@@ -80,42 +80,37 @@ export default class Login extends Vue {
 
   private async handleLoginClick(): Promise<void> {
     this.$store.dispatch('loader/toggleLoading')
-    this.$store
-      .dispatch('auth/loginWithEmail', {
-        email: this.email,
-        password: this.password,
-      })
-      .then(() => this.$store.dispatch('loader/toggleLoading'))
-      .catch((error: string) => {
-        this.clearForm()
-        this.showErrorAlert(error)
-        this.$store.dispatch('loader/toggleLoading')
-      })
-  }
-
-  private async handleSignupClick(): Promise<void> {
+    await this.login()
     this.$store.dispatch('loader/toggleLoading')
-    this.$store
-      .dispatch('auth/register', {
+  }
+
+  private async login(): Promise<void> {
+    return this.$store
+      .dispatch('auth/login', {
         email: this.email,
         password: this.password,
       })
-      .then(() => this.$store.dispatch('loader/toggleLoading'))
-      .catch((error: string) => {
-        this.clearForm()
-        this.showErrorAlert(error)
-        this.$store.dispatch('loader/toggleLoading')
-      })
-  }
-
-  private clearForm(): void {
-    this.email = ''
-    this.password = ''
+      .catch(this.showErrorAlert)
   }
 
   private showErrorAlert(message: string): void {
     this.error.isShow = true
     this.error.message = message
+  }
+
+  private async handleSignupClick(): Promise<void> {
+    this.$store.dispatch('loader/toggleLoading')
+    await this.signup()
+    this.$store.dispatch('loader/toggleLoading')
+  }
+
+  private signup(): Promise<void> {
+    return this.$store
+      .dispatch('auth/register', {
+        email: this.email,
+        password: this.password,
+      })
+      .catch(this.showErrorAlert)
   }
 
   private handleLoginWithGoogleClick(): void {

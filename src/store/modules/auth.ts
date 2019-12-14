@@ -31,8 +31,8 @@ const actions: ActionTree<IAuthState, IAuthState> = {
     }
   },
 
-  async loginWithEmail({ commit }, { email, password }) {
-    const credential = await FirebaseService.loginWithEmail(email, password)
+  async login({ commit }, { email, password }) {
+    const credential = await FirebaseService.login(email, password)
     const profile = await mapUserProfile(credential)
     commit('SET_CURRENT_USER', profile)
   },

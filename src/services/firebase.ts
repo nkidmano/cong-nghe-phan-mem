@@ -34,7 +34,7 @@ export class FirebaseService {
     return firebase.auth().signInWithRedirect(facebookAuthProvider)
   }
 
-  public static loginWithEmail(
+  public static login(
     email: string,
     password: string
   ): Promise<firebase.auth.UserCredential | string> {
