@@ -28,7 +28,7 @@ export default class App extends Vue {
   private loggedIn!: object | null
 
   @Watch('loggedIn')
-  private validateAuthState(loggedIn: any): void {
+  private async validateAuthState(loggedIn: any): Promise<void> {
     if (!loggedIn) {
       this.$router.push({ name: 'login' })
     } else {
@@ -36,12 +36,18 @@ export default class App extends Vue {
     }
   }
 
-  created() {
+  async created() {
     this.toggleLoading()
-    this.$store
-      .dispatch('auth/init')
-      .then(this.toggleLoading)
-      .catch(this.toggleLoading)
+    this.loggedIn ? await this.getTodos() : await this.initApp()
+    this.toggleLoading()
+  }
+
+  private async getTodos(): Promise<void> {
+    return this.$store.dispatch('task/getTodos').catch(console.warn)
+  }
+
+  private async initApp(): Promise<void> {
+    return this.$store.dispatch('auth/init').catch(console.warn)
   }
 
   private toggleLoading(): void {

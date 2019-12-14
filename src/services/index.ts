@@ -1,4 +1,5 @@
-import { FirebaseService, db } from './firebase'
+import FirebaseService from './firebase'
+import FirestoreService from './firestore'
 import StorageService from './storage'
 
-export { FirebaseService, StorageService, db }
+export { FirebaseService, StorageService, FirestoreService }

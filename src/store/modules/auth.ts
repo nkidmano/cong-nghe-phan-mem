@@ -6,7 +6,7 @@ interface IAuthState {
 }
 
 const state: IAuthState = {
-  currentUser: getCurrentUser(),
+  currentUser: getCurrentUserSavedState(),
 }
 
 type UserCredential = {
@@ -26,20 +26,20 @@ const actions: ActionTree<IAuthState, IAuthState> = {
   async init({ commit }) {
     const credential = await FirebaseService.getLoginResult()
     if (credential) {
-      const profile = await mapUserProfile(credential)
+      const profile = await createUserProfile(credential)
       commit('SET_CURRENT_USER', profile)
     }
   },
 
   async login({ commit }, { email, password }) {
     const credential = await FirebaseService.login(email, password)
-    const profile = await mapUserProfile(credential)
+    const profile = await createUserProfile(credential)
     commit('SET_CURRENT_USER', profile)
   },
 
   async register({ commit }, { email, password }) {
     const credential = await FirebaseService.register(email, password)
-    const profile = await mapUserProfile(credential)
+    const profile = await createUserProfile(credential)
     commit('SET_CURRENT_USER', profile)
   },
 
@@ -62,7 +62,7 @@ const authModule: Module<IAuthState, IAuthState> = {
   getters,
 }
 
-async function mapUserProfile({ user, additionalUserInfo }: any) {
+async function createUserProfile({ user, additionalUserInfo }: any): Promise<object> {
   if (!user.emailVerified) user.sendEmailVerification()
   const idToken = await user.getIdToken()
   const profile = {
@@ -75,7 +75,7 @@ async function mapUserProfile({ user, additionalUserInfo }: any) {
   return profile
 }
 
-function getCurrentUser(): object | null {
+function getCurrentUserSavedState(): object | null {
   try {
     const currentUser = StorageService.getCurrentUser()
     return currentUser ? JSON.parse(currentUser) : null

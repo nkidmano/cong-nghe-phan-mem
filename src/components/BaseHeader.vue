@@ -103,7 +103,6 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 
 import TodoDialog from './TodoDialog.vue'
-import { FirebaseService, StorageService } from '@/services'
 import { Todo } from '@/models'
 import { Watch } from 'vue-property-decorator'
 import { Route } from 'vue-router'
@@ -138,10 +137,16 @@ export default class BaseHeader extends Vue {
   }
 
   private async handleSaveClick(todo: Todo): Promise<void> {
-    this.showSnackbar('success', 'Yay, new thing todo !!!')
-    this.$store.dispatch('task/setTodo', { ...todo }).catch((error: string) => {
+    this.addTodo(todo)
+  }
+
+  private async addTodo(todo: Todo): Promise<void> {
+    try {
+      await this.$store.dispatch('task/addTodo', { ...todo })
+      this.showSnackbar('success', 'Yay, new thing todo !!!')
+    } catch (error) {
       this.showSnackbar('error', error)
-    })
+    }
   }
 
   private showSnackbar(type: string, message: string): void {

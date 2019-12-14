@@ -44,20 +44,12 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Todo } from '@/models'
 import { Getter } from 'vuex-class'
-import { db } from '@/services'
 import store from '@/store'
 
-@Component({
-  beforeRouteEnter: async (routeTo, routeFrom, next) => {
-    store.dispatch('loader/toggleLoading')
-    await store.dispatch('task/getTodos')
-    store.dispatch('loader/toggleLoading')
-    next()
-  },
-})
+@Component
 export default class Home extends Vue {
-  @Getter('task/getEnrichedTodos')
-  private todos!: Todo[]
+  @Getter('task/enrichedTodos')
+  public todos!: Todo[]
 
   private currentTab: string = 'tab-todo'
 }

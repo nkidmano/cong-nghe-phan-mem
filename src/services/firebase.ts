@@ -1,7 +1,5 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/firestore'
-import store from '@/store'
 
 firebase.initializeApp({
   apiKey: 'AIzaSyAHjtTJw9NRWiRaRoqZP1b4zn4fnVXkPCg',
@@ -12,12 +10,11 @@ firebase.initializeApp({
   messagingSenderId: '795856584302',
   appId: '1:795856584302:web:0e96e9357ed386e61e307f',
 })
-export const db = firebase.firestore()
 
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
 
-export class FirebaseService {
+export default class FirebaseService {
   public static getLoginResult(): Promise<firebase.auth.UserCredential | null> {
     return firebase
       .auth()

@@ -1,7 +1,8 @@
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex'
+import { firestoreAction } from 'vuexfire'
+
 import { ITaskState, Todo, TodoPriority } from '@/models'
-import { db } from '@/services'
-import { vuexfireMutations, firestoreAction } from 'vuexfire'
+import { FirestoreService } from '@/services'
 
 const state: ITaskState = {
   todos: [],
@@ -10,46 +11,43 @@ const state: ITaskState = {
 }
 
 const mutations: MutationTree<ITaskState> = {
-  // TODO refactor SET_TODOS and SET_TODO
-  SET_TODOS(state: ITaskState, todos: Todo[]) {
+  SET_TODO(state: ITaskState, todos: Todo[]) {
     state.todos = todos
   },
-  // TODO refactor SET_TODOS and SET_TODO
-  SET_TODO(state: ITaskState, todo: Todo): void {
+  ADD_TODO(state: ITaskState, todo: Todo) {
     state.todos.push(todo)
   },
-  REMOVE_TODO(state: ITaskState, todo: Todo): void {
-    state.todos = state.todos.filter((t) => t.name !== todo.name)
+  REMOVE_TODO(state: ITaskState, todo: Todo) {
+    state.todos = state.todos.filter((_todo) => _todo.name !== todo.name)
   },
-
-  ...vuexfireMutations,
 }
 
 const actions: ActionTree<ITaskState, ITaskState> = {
-  getTodos: async ({ commit }) => {
-    // remove db
-    // add FirestoreService
-    const querySnapshot = await db.collection('todos').get()
-    const todos = querySnapshot.docs.map((doc) => doc.data())
-    commit('SET_TODOS', todos)
+  async getTodos({ commit }) {
+    try {
+      const querySnapshot = await FirestoreService.getTodoCollection().get()
+      const todos = querySnapshot.docs.map((doc) => doc.data())
+      commit('SET_TODO', todos)
+      return todos
+    } catch (error) {
+      return Promise.reject('Unexpected error')
+    }
   },
 
-  setTodo: async ({ commit }, todo: Todo) => {
+  async addTodo({ commit }, todo: Todo) {
     try {
-      // remove db
-      // add FirestoreService
-      commit('SET_TODO', todo)
-      db.collection('todos').add(todo)
+      commit('ADD_TODO', todo)
+      FirestoreService.addTodo(todo)
     } catch (error) {
       commit('REMOVE_TODO', todo)
-      return Promise.reject('Unexpected error, please try again later')
+      return Promise.reject(error)
     }
   },
 }
 
 const getters: GetterTree<ITaskState, ITaskState> = {
-  getTodos: (state: ITaskState): Todo[] => state.todos,
-  getEnrichedTodos: (state: ITaskState) =>
+  todos: (state: ITaskState): Todo[] => state.todos,
+  enrichedTodos: (state: ITaskState) =>
     state.todos.map((todo) => ({ ...todo, priority: new TodoPriority(todo.priority) })),
 }
 
