@@ -4,7 +4,7 @@
       <div class="text-center mb-8">
         <v-icon size="67.5">mdi-shield-account</v-icon>
       </div>
-      <v-form>
+      <v-form @submit.prevent="handleLoginClick">
         <v-text-field
           class="mb-3"
           type="email"
@@ -26,7 +26,7 @@
         <v-alert type="error" dismissible dense v-model="error.isShow">
           {{ error.message }}
         </v-alert>
-        <v-btn class="mb-2" color="primary" tile large block @click="handleLoginClick">
+        <v-btn class="mb-2" color="primary" type="submit" tile large block>
           Login
         </v-btn>
         <v-btn class="mb-2" color="secondary" block text x-small>

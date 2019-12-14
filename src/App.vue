@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <base-header v-if="loggedIn" />
+    <base-header v-if="loggedIn"></base-header>
     <v-content>
       <router-view :key="$route.fullPath"></router-view>
     </v-content>
@@ -13,13 +13,9 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import firebase from 'firebase/app'
-import 'firebase/auth'
 
 import BaseHeader from '@/components/BaseHeader.vue'
 import BaseLoader from '@/components/BaseLoader.vue'
-import { StorageService, FirebaseService } from '@/services'
-import store from './store'
 
 @Component({
   components: {
