@@ -4,6 +4,7 @@
     <v-content>
       <router-view :key="$route.fullPath"></router-view>
     </v-content>
+    <base-loader></base-loader>
   </v-app>
 </template>
 
@@ -12,13 +13,18 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 import BaseHeader from '@/components/BaseHeader.vue'
+import BaseLoader from '@/components/BaseLoader.vue'
 import { StorageService, FirebaseService } from '@/services'
+import store from './store'
 
 @Component({
   components: {
     BaseHeader,
+    BaseLoader,
   },
 })
 export default class App extends Vue {
@@ -35,9 +41,15 @@ export default class App extends Vue {
   }
 
   created() {
-    this.$store.dispatch('auth/init').catch((error: string) => {
-      alert('You already have an account, ' + error)
-    })
+    this.toggleLoading()
+    this.$store
+      .dispatch('auth/init')
+      .then(this.toggleLoading)
+      .catch(this.toggleLoading)
+  }
+
+  private toggleLoading(): void {
+    this.$store.dispatch('loader/toggleLoading')
   }
 }
 </script>

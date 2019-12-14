@@ -49,7 +49,9 @@ import store from '@/store'
 
 @Component({
   beforeRouteEnter: async (routeTo, routeFrom, next) => {
+    store.dispatch('loader/toggleLoading')
     await store.dispatch('task/getTodos')
+    store.dispatch('loader/toggleLoading')
     next()
   },
 })

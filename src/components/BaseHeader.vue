@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-0">
-    <v-app-bar app extension-height="150" dark flat color="grey darken-2">
+    <v-app-bar v-if="loggedIn" app extension-height="150" dark flat color="grey darken-2">
       <v-app-bar-nav-icon @click.stop="showDrawer = !showDrawer" />
       <v-spacer />
       <v-toolbar-title>{{ $route.meta.viewName }}</v-toolbar-title>

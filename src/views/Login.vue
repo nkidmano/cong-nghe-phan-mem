@@ -26,11 +26,11 @@
         <v-alert type="error" dismissible dense v-model="error.isShow">
           {{ error.message }}
         </v-alert>
-        <v-btn class="mb-4" color="secondary" tile large block @click="handleLoginClick">
+        <v-btn class="mb-2" color="primary" tile large block @click="handleLoginClick">
           Login
         </v-btn>
-        <v-btn class="mb-4" color="primary" tile large block @click="handleSignupClick">
-          Create account
+        <v-btn class="mb-2" color="secondary" block text x-small>
+          Forgot password
         </v-btn>
       </v-form>
       <p class="text-center">Or</p>
@@ -46,6 +46,7 @@
         Login with Google
       </v-btn>
       <v-btn
+        class="mb-3"
         color="secondary"
         rounded
         outlined
@@ -54,6 +55,10 @@
         @click="handleLoginWithFacebookClick"
       >
         Login with Facebook
+      </v-btn>
+      <v-divider class="mb-5"></v-divider>
+      <v-btn class="mb-4" color="primary" tile large block @click="handleSignupClick">
+        Create account
       </v-btn>
     </v-container>
   </div>
@@ -66,34 +71,40 @@ import { FirebaseService, StorageService } from '@/services'
 
 @Component
 export default class Login extends Vue {
-  private email: string = ''
-  private password: string = ''
+  private email: string = 'nobudy55@gmail.com'
+  private password: string = '123456'
   private error: { message: string; isShow: boolean } = {
     message: '',
     isShow: false,
   }
 
   private async handleLoginClick(): Promise<void> {
+    this.$store.dispatch('loader/toggleLoading')
     this.$store
       .dispatch('auth/loginWithEmail', {
         email: this.email,
         password: this.password,
       })
+      .then(() => this.$store.dispatch('loader/toggleLoading'))
       .catch((error: string) => {
         this.clearForm()
         this.showErrorAlert(error)
+        this.$store.dispatch('loader/toggleLoading')
       })
   }
 
   private async handleSignupClick(): Promise<void> {
+    this.$store.dispatch('loader/toggleLoading')
     this.$store
-      .dispatch('auth/createAccount', {
+      .dispatch('auth/register', {
         email: this.email,
         password: this.password,
       })
+      .then(() => this.$store.dispatch('loader/toggleLoading'))
       .catch((error: string) => {
         this.clearForm()
         this.showErrorAlert(error)
+        this.$store.dispatch('loader/toggleLoading')
       })
   }
 

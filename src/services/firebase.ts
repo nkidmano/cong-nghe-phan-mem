@@ -17,42 +17,13 @@ export const db = firebase.firestore()
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
 
-type UserCredential = {
-  additionalUserInfo?: firebase.auth.AdditionalUserInfo | null
-  credential: firebase.auth.AuthCredential | null
-  operationType?: string | null
-  user: firebase.User | null
-}
-
 export class FirebaseService {
-  public static onAuthStateChanged(): void {
-    firebase.auth().onAuthStateChanged(async (currentUser) => {
-      if (currentUser) {
-        if (!currentUser.emailVerified) {
-          currentUser.sendEmailVerification()
-          return
-        }
-
-        const profile = {
-          name: currentUser.displayName,
-          email: currentUser.email,
-          uid: currentUser.uid,
-          idToken: await currentUser.getIdToken(true),
-        }
-
-        store.commit('auth/SET_CURRENT_USER', profile)
-      }
-    })
-  }
-
-  public static async getLoginResult(): Promise<UserCredential | null> {
-    try {
-      const credential = await firebase.auth().getRedirectResult()
-      return credential.user ? credential : null
-    } catch (error) {
-      console.warn(error)
-      return null
-    }
+  public static getLoginResult(): Promise<firebase.auth.UserCredential | null> {
+    return firebase
+      .auth()
+      .getRedirectResult()
+      .then((credential) => (credential.user ? credential : null))
+      .catch(() => null)
   }
 
   public static loginWithGoogle(): Promise<void> {
@@ -63,42 +34,44 @@ export class FirebaseService {
     return firebase.auth().signInWithRedirect(facebookAuthProvider)
   }
 
-  public static async loginWithEmail(
+  public static loginWithEmail(
     email: string,
     password: string
-  ): Promise<UserCredential | string> {
-    try {
-      const credential = await firebase.auth().signInWithEmailAndPassword(email, password)
-      return credential
-    } catch (error) {
-      console.warn(error)
-      if (error.code === 'auth/user-disabled') {
-        return Promise.reject('Account has been disabled')
-      }
-      return Promise.reject('Invalid email or password')
-    }
+  ): Promise<firebase.auth.UserCredential | string> {
+    return firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((credential) => credential)
+      .catch((error) => {
+        console.warn(error)
+        if (error.code === 'auth/user-disabled') {
+          return Promise.reject('Account has been disabled')
+        }
+        return Promise.reject('Invalid email or password')
+      })
   }
 
-  public static async createAccount(
+  public static register(
     email: string,
     password: string
-  ): Promise<UserCredential | string> {
-    try {
-      const credential = await firebase.auth().createUserWithEmailAndPassword(email, password)
-      return credential
-    } catch (error) {
-      console.warn(error)
-      if (error.code === 'auth/email-already-in-use') {
-        return Promise.reject('Email already in use')
-      }
-      if (error.code === 'auth/invalid-email') {
-        return Promise.reject('Invalid email')
-      }
-      if (error.code === 'auth/weak-password') {
-        return Promise.reject('Invalid email')
-      }
-      return Promise.reject('Unexpected error, please try again later')
-    }
+  ): Promise<firebase.auth.UserCredential | string> {
+    return firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((credential) => credential)
+      .catch((error) => {
+        console.warn(error)
+        if (error.code === 'auth/email-already-in-use') {
+          return Promise.reject('Email already in use')
+        }
+        if (error.code === 'auth/invalid-email') {
+          return Promise.reject('Invalid email')
+        }
+        if (error.code === 'auth/weak-password') {
+          return Promise.reject('Invalid email')
+        }
+        return Promise.reject('Unexpected error, please try again later')
+      })
   }
 
   public static logout(): Promise<void> {
