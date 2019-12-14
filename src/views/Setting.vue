@@ -1,78 +1,60 @@
 <template>
   <v-container>
-    <p class="title">Focus</p>
-    <v-divider></v-divider>
+    <v-card class="mb-4">
+      <v-card-title>Focus</v-card-title>
+      <v-card-text>
+        <v-text-field
+          type="number"
+          hint="minutes"
+          label="Duration"
+          hide-details
+          outlined
+          dense
+        ></v-text-field>
+        <v-switch label="Show notification on complete" hide-details></v-switch>
+        <v-switch label="Play sound on complete" hide-details></v-switch>
+      </v-card-text>
+    </v-card>
 
-    <div class="duration-option mb-2">
-      <span>Duration:</span>
-      <input class="red-border" type="number" />
-      <span>minutes</span>
-    </div>
+    <v-card class="mb-4">
+      <v-card-title>Short Break</v-card-title>
+      <v-card-text>
+        <v-text-field
+          type="number"
+          hint="minutes"
+          label="Duration"
+          hide-details
+          outlined
+          dense
+        ></v-text-field>
+        <v-switch label="Show notification on complete" hide-details></v-switch>
+        <v-switch label="Play sound on complete" hide-details></v-switch>
+      </v-card-text>
+    </v-card>
 
-    <div class="complete-option mb-2">
-      <span>When complete:</span>
-      <div class="option-box">
-        <label class="ml-6" for="notification">
-          <input class="red-border" id="notification" type="checkbox" />
-          Show notification
-        </label>
-        <label for="sound" class="ml-6">
-          <input class="red-border" id="sound" type="checkbox" />
-          Play sound
-        </label>
-      </div>
-    </div>
-
-    <p class="title">Short Break</p>
-    <v-divider></v-divider>
-
-    <div class="duration-option mb-2">
-      <span>Duration:</span>
-      <input class="red-border" type="number" />
-      <span>minutes</span>
-    </div>
-
-    <div class="complete-option mb-2">
-      <span>When complete:</span>
-      <div class="option-box">
-        <label class="ml-6" for="notification">
-          <input id="notification" type="checkbox" />
-          Show notification
-        </label>
-        <label for="sound" class="ml-6">
-          <input id="sound" type="checkbox" />
-          Play sound
-        </label>
-      </div>
-    </div>
-
-    <p class="title">Long Break</p>
-    <v-divider></v-divider>
-
-    <div class="duration-option mb-2">
-      <span>Take a long break:</span>
-      <select class="red-border" name="long-break" id="">
-        <option value="0">never</option>
-        <option value="2">every 2nd break</option>
-        <option value="3">every 3rd break</option>
-        <option value="4">every 4th break</option>
-        <option value="5">every 5th break</option>
-      </select>
-    </div>
-
-    <div class="complete-option mb-2">
-      <span>When complete:</span>
-      <div class="option-box">
-        <label class="ml-6" for="notification">
-          <input id="notification" type="checkbox" />
-          Show notification
-        </label>
-        <label for="sound" class="ml-6">
-          <input id="sound" type="checkbox" />
-          Play sound
-        </label>
-      </div>
-    </div>
+    <v-card>
+      <v-card-title>Long Break</v-card-title>
+      <v-card-text>
+        <v-select
+          class="mb-2"
+          :items="longBreakOptions"
+          label="Take a long break on"
+          dense
+          outlined
+          hide-details
+        ></v-select>
+        <v-text-field
+          type="number"
+          hint="minutes"
+          label="Duration"
+          hide-details
+          outlined
+          dense
+        ></v-text-field>
+        <v-switch label="Show notification on complete" hide-details></v-switch>
+        <v-switch label="Play sound on complete" hide-details></v-switch>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -81,7 +63,15 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 
 @Component
-export default class Setting extends Vue {}
+export default class Setting extends Vue {
+  private longBreakOptions = [
+    'Never',
+    'Every 2nd break',
+    'Every 3rd break',
+    'Every 4th break',
+    'Every 5th break',
+  ]
+}
 </script>
 
 <style lang="scss" scoped>
