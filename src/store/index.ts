@@ -5,12 +5,14 @@ import { vuexfireMutations } from 'vuexfire'
 import authModule from './modules/auth'
 import taskModule from './modules/task'
 import loaderModule from './modules/loader'
+import settingModule from './modules/setting'
 
 Vue.use(Vuex)
 
 const modules: ModuleTree<any> = {
   auth: authModule,
   task: taskModule,
+  setting: settingModule,
   loader: loaderModule,
 }
 
