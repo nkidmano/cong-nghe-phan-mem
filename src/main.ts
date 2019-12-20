@@ -9,6 +9,15 @@ import '@mdi/font/css/materialdesignicons.css'
 
 Vue.config.productionTip = false
 
+Vue.filter('minute', (ms: number) => {
+  return Math.floor((+ms / 1000 / 60) % 60)
+})
+
+Vue.filter('second', (ms: number) => {
+  const result: number = Math.floor((ms / 1000) % 60)
+  return result < 10 ? '0' + result : result
+})
+
 new Vue({
   router,
   store,

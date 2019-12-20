@@ -12,9 +12,13 @@
       <template v-if="showTimer" v-slot:extension>
         <v-container class="pa-0">
           <v-row class="mb-1" no-gutters>
-            <v-col class="display-3 font-weight-bold text-right" cols="5">09</v-col>
+            <v-col class="display-3 font-weight-bold text-right" cols="5">
+              {{ timer | minute }}
+            </v-col>
             <v-col class="display-3 font-weight-bold text-center" cols="2">:</v-col>
-            <v-col class="display-3 font-weight-bold" cols="5">12</v-col>
+            <v-col class="display-3 font-weight-bold" cols="5">
+              {{ timer | second }}
+            </v-col>
           </v-row>
           <v-row no-gutters>
             <v-col class="time--text subtitle-1 font-weight-thin text-right" cols="5">
@@ -101,6 +105,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { format } from 'date-fns'
 
 import TodoDialog from './TodoDialog.vue'
 import { Todo } from '@/models'
@@ -114,6 +119,8 @@ import { Getter } from 'vuex-class'
   },
 })
 export default class BaseHeader extends Vue {
+  private timer: any = 1500000 // 50 minutes
+
   private showTimer: boolean = false
   private showDrawer: boolean = false
   private showCreateTodoDialog: boolean = false
@@ -122,6 +129,16 @@ export default class BaseHeader extends Vue {
     timeout: 3000,
     color: '',
     message: '',
+  }
+
+  created() {
+    const timerInterval = setInterval(() => {
+      this.timer -= 1000
+    }, 1000)
+
+    this.$once('hook:beforeDestroy', () => {
+      clearInterval(timerInterval)
+    })
   }
 
   @Getter('auth/loggedIn')
