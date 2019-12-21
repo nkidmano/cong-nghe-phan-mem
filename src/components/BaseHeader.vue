@@ -11,23 +11,30 @@
 
       <template v-if="showTimer" v-slot:extension>
         <v-container class="pa-0">
-          <v-row class="mb-1" no-gutters>
-            <v-col class="display-3 font-weight-bold text-right" cols="5">
-              {{ timer | minute }}
-            </v-col>
-            <v-col class="display-3 font-weight-bold text-center" cols="2">:</v-col>
-            <v-col class="display-3 font-weight-bold" cols="5">
-              {{ timer | second }}
-            </v-col>
-          </v-row>
-          <v-row no-gutters>
-            <v-col class="time--text subtitle-1 font-weight-thin text-right" cols="5">
-              <span class="mr-1">Mins</span>
-            </v-col>
-            <v-col cols="2">&nbsp;</v-col>
-            <v-col class="time--text subtitle-1 font-weight-thin" cols="5">
-              <span class="ml-4">Secs</span>
-            </v-col>
+          <template v-if="timer.isPlaying">
+            <v-row class="mb-1" no-gutters @click="handleStopClick">
+              <v-col class="display-3 font-weight-bold text-right" cols="5">
+                {{ timer.time | minute }}
+              </v-col>
+              <v-col class="display-3 font-weight-bold text-center" cols="2">:</v-col>
+              <v-col class="display-3 font-weight-bold" cols="5">
+                {{ timer.time | second }}
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col class="time--text subtitle-1 font-weight-thin text-right" cols="5">
+                <span class="mr-1">Mins</span>
+              </v-col>
+              <v-col cols="2">&nbsp;</v-col>
+              <v-col class="time--text subtitle-1 font-weight-thin" cols="5">
+                <span class="ml-4">Secs</span>
+              </v-col>
+            </v-row>
+          </template>
+          <v-row class="justify-center" v-else>
+            <v-btn @click="handlePlayClick" icon>
+              <v-icon size="100">mdi-play-circle-outline</v-icon>
+            </v-btn>
           </v-row>
         </v-container>
       </template>
@@ -111,7 +118,7 @@ import TodoDialog from './TodoDialog.vue'
 import { Todo } from '@/models'
 import { Watch } from 'vue-property-decorator'
 import { Route } from 'vue-router'
-import { Getter } from 'vuex-class'
+import { Getter, Action } from 'vuex-class'
 
 @Component({
   components: {
@@ -119,11 +126,17 @@ import { Getter } from 'vuex-class'
   },
 })
 export default class BaseHeader extends Vue {
-  private timer: any = 1500000 // 50 minutes
+  @Getter('auth/loggedIn')
+  private loggedIn!: boolean
 
   private showTimer: boolean = false
   private showDrawer: boolean = false
   private showCreateTodoDialog: boolean = false
+  private timer = {
+    time: 1500000,
+    interval: 0,
+    isPlaying: false,
+  }
   private snackbar: { show: boolean; timeout: number; color: string; message: string } = {
     show: false,
     timeout: 3000,
@@ -131,18 +144,8 @@ export default class BaseHeader extends Vue {
     message: '',
   }
 
-  created() {
-    const timerInterval = setInterval(() => {
-      this.timer -= 1000
-    }, 1000)
-
-    this.$once('hook:beforeDestroy', () => {
-      clearInterval(timerInterval)
-    })
-  }
-
-  @Getter('auth/loggedIn')
-  private loggedIn!: boolean
+  @Action('auth/logout')
+  private logout!: () => Promise<void>
 
   @Watch('$route', { immediate: true })
   private onRouteChange(route: Route): void {
@@ -151,6 +154,37 @@ export default class BaseHeader extends Vue {
     } else {
       this.showTimer = true
     }
+  }
+
+  @Watch('timer')
+  private onTimerChange(ms: number): void {
+    if (ms === 0) {
+      clearInterval(this.timer.interval)
+    }
+  }
+
+  private handlePlayClick(): void {
+    this.startCountdown()
+  }
+
+  private startCountdown(): void {
+    this.timer.isPlaying = true
+    this.timer.interval = setInterval(() => {
+      this.timer.time -= 1000
+    }, 1000)
+  }
+
+  private handleStopClick(): void {
+    this.stopCountDown()
+  }
+
+  private stopCountDown(): void {
+    this.timer.isPlaying = false
+    clearInterval(this.timer.interval)
+  }
+
+  private resetCountDown(): void {
+    this.timer.time = 1500000
   }
 
   private async handleSaveClick(todo: Todo): Promise<void> {
@@ -170,10 +204,6 @@ export default class BaseHeader extends Vue {
     this.snackbar.show = true
     this.snackbar.color = type
     this.snackbar.message = message
-  }
-
-  private async logout(): Promise<void> {
-    this.$store.dispatch('auth/logout')
   }
 }
 </script>
